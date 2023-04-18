@@ -36,6 +36,8 @@ client.on("messageCreate", async (message) => {
       );
     }
   } else if (isValidHttpUrl(command)) {
+    await message.deferReply();
+	await wait(4000);
     message.suppressEmbeds(true);
     await handleProcess(message, command);
   }
@@ -58,7 +60,7 @@ const handleProcess = async (message, url, reply) => {
   if (reply) {
     message.reply({ files: [`output-${filename}`] });
   } else {
-    message.channel.send({ files: [`output-${filename}`] });
+    message.editReply({ files: [`output-${filename}`] });
     message.delete();
   }
 };
