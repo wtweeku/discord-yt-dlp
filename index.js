@@ -86,6 +86,9 @@ const downloadVideo = async (link) => new Promise((resolve, reject) => {
         "--no-playlist",
         "-f",
         "((bv*[filesize<=25M]/bv*)[height<=720]/(wv*[filesize<=25M]/wv*)) + ba / (b[filesize<=25M]/b)[height<=720]/(w[filesize<=25M]/w)",
+        // Add your instagram cookies here
+        "--cookies",
+        "/path/to/cookies.txt",
         "-S",
         "codec:h264",
         "--merge-output-format",
