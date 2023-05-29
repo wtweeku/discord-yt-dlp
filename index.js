@@ -11,10 +11,15 @@ client.once('ready', () => {
     console.log('Bot is running!');
 });
 const prefix = "?";
+
 client.on("messageCreate", async (message) => {
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix)) return;
-
+        // Check if the user ID is the specific ID that should be blocked
+        const blockedUserID = "";
+        if (message.author.id === blockedUserID) {
+                return message.reply("There was an error, try again.");
+        }
     const commandBody = message.content.slice(prefix.length);
     const args = commandBody.split(' ');
     const command = args.shift()
@@ -39,27 +44,29 @@ client.on("messageCreate", async (message) => {
     }
 });
 
-
 const handleProcess = async (message, url, reply) => {
-    message.channel.sendTyping()
-    const filename = await downloadVideo(url)
-    if (!filename) return message.reply(`Failed to ytdl.`);
-    if (await getFileSize(filename) > 8) {
-        const smaller = await transcode(filename, 39)
-        if (!smaller) return message.reply(`Failed to transcode.`)
-        const smallerSize = await getFileSize(`output-${filename}`)
-        if (smallerSize > 8 ) return message.reply(`After downgrade filesize was: ${smallerSize}MiB`)
+    message.channel.sendTyping();
+    const filename = await downloadVideo(url);
+    if (!filename) return message.reply(`erreur :pensive:`);
+    if (await getFileSize(filename) > 25) {
+        const smaller = await transcode(filename, 39);
+        if (!smaller) return message.reply(`Failed to transcode.`);
+        const smallerSize = await getFileSize(`output-${filename}`);
+        if (smallerSize > 25) return message.reply(`It's too big :hot_face:`);
     } else {
-        await fs.rename(filename, `output-${filename}`)
+        await fs.rename(filename, `output-${filename}`);
     }
 
+    const userMention = `<@${message.author.id}>`; // Mentioning the user who uploaded the video
+
     if (reply) {
-        message.reply({ files: [`output-${filename}`] })
+        message.reply({ content: `uploaded by ${userMention}`, files: [`output-${filename}`] });
     } else {
-        message.channel.send({ files: [`output-${filename}`] })
+        message.channel.send({ content: `uploaded by ${userMention}`, files: [`output-${filename}`] });
         message.delete()
     }
 }
+
 
 client.login('YOURTOKENHERE');
 
@@ -78,7 +85,7 @@ const downloadVideo = async (link) => new Promise((resolve, reject) => {
         "--no-playlist",
         "--no-playlist",
         "-f",
-        "((bv*[filesize<=6M]/bv*)[height<=720]/(wv*[filesize<=6]/wv*)) + ba / (b[filesize<=6M]/b)[height<=720]/(w[filesize<=6M]/w)",
+        "((bv*[filesize<=25M]/bv*)[height<=720]/(wv*[filesize<=25M]/wv*)) + ba / (b[filesize<=25M]/b)[height<=720]/(w[filesize<=25M]/w)",
         "-S",
         "codec:h264",
         "--merge-output-format",
