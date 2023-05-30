@@ -1,0 +1,13 @@
+[Unit]
+Description=Discord Downloader
+After=network.target
+
+[Service]
+User=YOUR_USER_HERE
+Environment=NODE_ENV=production
+WorkingDirectory=/path/to/path
+ExecStart=/usr/bin/node /path/to/index.js
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
