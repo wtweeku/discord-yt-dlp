@@ -24,19 +24,15 @@ client.on("messageCreate", async (message) => {
     const commandBody = message.content.slice(prefix.length);
     const args = commandBody.split(' ');
     const command = args.shift()
-    if (command === "ping") {
-        const timeTaken = Date.now() - message.createdTimestamp;
-        message.reply(`Pong! This message had a latency of ${timeTaken}ms.`);
-    }
-    else if (command === "s") {
+    if (command === "s") {
         const searchTerm = args.join(' ')
         const videos = await yt.search(searchTerm);
         const topResults = videos.length > 9 ? videos.slice(0, 9) : videos
-        const shortVideo = topResults.find(x => moment(x.duration_raw, "mm:ss").minutes() < 1)
+        const shortVideo = topResults.find(x => moment(x.duration_raw, "mm:ss").minutes() < 11)
         if (shortVideo) {
             return await handleProcess(message, shortVideo.url, true)
         } else {
-            return message.reply(`No videos under 1 minute found from top 10 results`);
+            return message.reply(`No videos under 11 minutes found from top 10 results`);
         }
     }
     else if (isValidHttpUrl(command)) {
