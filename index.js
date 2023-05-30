@@ -6,6 +6,7 @@ const fs = require('fs').promises;
 const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES"] });
 const path = require("path");
 var moment = require('moment');
+require("dotenv").config();
 
 client.once('ready', () => {
     console.log('Bot is running!');
@@ -16,7 +17,7 @@ client.on("messageCreate", async (message) => {
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix)) return;
         // Check if the user ID is the specific ID that should be blocked
-        const blockedUserID = "";
+        const blockedUserID = process.env.BLOCKED_USER_ID;
         if (message.author.id === blockedUserID) {
                 return message.reply("There was an error, try again.");
         }
@@ -68,7 +69,7 @@ const handleProcess = async (message, url, reply) => {
 }
 
 
-client.login('YOURTOKENHERE');
+client.login(process.env.TOKEN);
 
 const getFileSize = async filename => {
     const stats = await fs.stat(filename)
