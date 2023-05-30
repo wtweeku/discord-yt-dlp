@@ -74,6 +74,8 @@ const getFileSize = async filename => {
     return fileSizeInMegabytes
 }
 
+const cookiePath = process.env.COOKIE_PATH;
+
 const downloadVideo = async (link) => new Promise((resolve, reject) => {
     const filename = nanoid(8)
     console.log("starting to download: ", link)
@@ -85,7 +87,7 @@ const downloadVideo = async (link) => new Promise((resolve, reject) => {
         "((bv*[filesize<=25M]/bv*)[height<=720]/(wv*[filesize<=25M]/wv*)) + ba / (b[filesize<=25M]/b)[height<=720]/(w[filesize<=25M]/w)",
         // Add your instagram cookies here
         "--cookies",
-        "/path/to/cookies.txt",
+        cookiePath,
         "-S",
         "codec:h264",
         "--merge-output-format",
